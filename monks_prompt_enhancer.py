@@ -21,7 +21,7 @@ SYSTEM_PROMPTS = {
 }
 
 MODEL_IDS = {
-    "Gemini Flash 2.5": "gemini-2.5-flash-preview-04-17",
+    "Gemini Flash 2.5": "gemini-2.5-flash",
 }
 
 
