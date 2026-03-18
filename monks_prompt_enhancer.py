@@ -24,6 +24,8 @@ MODEL_IDS = {
     "Gemini Flash 2.5": "gemini-2.5-flash",
 }
 
+NODE_NAME = "Nano-Banana-Monks Prompt Enhancer"
+
 
 # ---------------------------------------------------------------------------
 # Node definition
@@ -46,14 +48,14 @@ class MonksPromptEnhancer:
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("enhanced_prompt",)
     FUNCTION = "enhance"
-    CATEGORY = "Monks/Text"
+    CATEGORY = "Gemini AI/TextGen"
     OUTPUT_NODE = False
 
     def enhance(self, prompt: str, api_key: str, model: str, purpose: str) -> tuple[str]:
         if not api_key.strip():
-            raise ValueError("[Monks Prompt Enhancer] API key is required.")
+            raise ValueError(f"[{NODE_NAME}] API key is required.")
         if not prompt.strip():
-            raise ValueError("[Monks Prompt Enhancer] Prompt cannot be empty.")
+            raise ValueError(f"[{NODE_NAME}] Prompt cannot be empty.")
 
         system_prompt = SYSTEM_PROMPTS[purpose]
         model_id = MODEL_IDS[model]
@@ -68,7 +70,7 @@ class MonksPromptEnhancer:
 
         if not response.text:
             raise RuntimeError(
-                "[Monks Prompt Enhancer] Gemini returned an empty response. "
+                f"[{NODE_NAME}] Gemini returned an empty response. "
                 "Check your API key, quota, or prompt content."
             )
 
@@ -84,5 +86,5 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "MonksPromptEnhancer": "Monks Prompt Enhancer",
+    "MonksPromptEnhancer": NODE_NAME,
 }
