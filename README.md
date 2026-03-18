@@ -1,4 +1,4 @@
-# Monks Prompt Enhancer
+# Nano-Banana-Monks Prompt Enhancer
 
 A ComfyUI custom node that enhances image generation prompts using the Gemini API.
 
@@ -18,7 +18,7 @@ A ComfyUI custom node that enhances image generation prompts using the Gemini AP
    ```
 3. Restart ComfyUI.
 
-The node will appear under the **Monks/Text** category.
+The node will appear under the **Gemini AI/TextGen** category.
 
 ## Inputs
 
@@ -63,4 +63,4 @@ Edit these files to customize the enhancement behavior without touching the node
 
 | Display name | Model ID |
 |---|---|
-| Gemini Flash 2.5 | `gemini-2.5-flash-preview-04-17` |
+| Gemini Flash 2.5 | `gemini-2.5-flash` |
