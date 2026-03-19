@@ -1,5 +1,7 @@
 import pathlib
 
+import numpy as np
+from PIL import Image
 import google.generativeai as genai
 
 # ---------------------------------------------------------------------------
@@ -28,6 +30,18 @@ NODE_NAME = "Nano-Banana-Monks Prompt Enhancer"
 
 
 # ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _tensor_to_pil(tensor) -> Image.Image:
+    """Convert a ComfyUI IMAGE tensor (B, H, W, C) float32 to a PIL image."""
+    # Take the first image in the batch
+    array = tensor[0].cpu().numpy()
+    array = (array * 255).clip(0, 255).astype(np.uint8)
+    return Image.fromarray(array)
+
+
+# ---------------------------------------------------------------------------
 # Node definition
 # ---------------------------------------------------------------------------
 
@@ -42,7 +56,10 @@ class MonksPromptEnhancer:
                 "api_key": ("STRING", {"default": "", "password": True}),
                 "model": (list(MODEL_IDS.keys()),),
                 "purpose": (list(SYSTEM_PROMPTS.keys()),),
-            }
+            },
+            "optional": {
+                "reference_image": ("IMAGE",),
+            },
         }
 
     RETURN_TYPES = ("STRING",)
@@ -51,7 +68,14 @@ class MonksPromptEnhancer:
     CATEGORY = "Gemini AI/TextGen"
     OUTPUT_NODE = False
 
-    def enhance(self, prompt: str, api_key: str, model: str, purpose: str) -> tuple[str]:
+    def enhance(
+        self,
+        prompt: str,
+        api_key: str,
+        model: str,
+        purpose: str,
+        reference_image=None,
+    ) -> tuple[str]:
         if not api_key.strip():
             raise ValueError(f"[{NODE_NAME}] API key is required.")
         if not prompt.strip():
@@ -66,7 +90,13 @@ class MonksPromptEnhancer:
             system_instruction=system_prompt,
         )
 
-        response = gemini_model.generate_content(prompt)
+        if reference_image is not None:
+            pil_image = _tensor_to_pil(reference_image)
+            content = [pil_image, prompt]
+        else:
+            content = prompt
+
+        response = gemini_model.generate_content(content)
 
         if not response.text:
             raise RuntimeError(
