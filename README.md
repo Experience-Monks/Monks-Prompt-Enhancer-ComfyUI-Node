@@ -116,3 +116,10 @@ Connect the image to edit and describe the change. The node strips out any descr
 
 > **Input:** `Remove the Bottle from the Table`
 > **Output:** Remove the pink Pepto Bismol bottle from the table. Fill the space with the existing marble tabletop texture, maintaining the original lighting and reflections.
+
+---
+
+### Model Variance — same prompt, different target models
+Switching `target_image_generation_model` on the same input produces structurally different outputs. Gemini Nano Banana receives a rich narrative paragraph; FLUX.2 Klein receives prose or a concise directive tuned to how that model processes text — no keyword lists, no redundant descriptions.
+
+![Model variance example](documentation/usage_examples/generate-prompt-model-variance.png)
