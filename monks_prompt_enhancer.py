@@ -10,23 +10,40 @@ import google.generativeai as genai
 
 _PROMPTS_DIR = pathlib.Path(__file__).parent / "prompts"
 
+# Subfolder name for each image generation model
+IMAGE_GENERATION_MODELS = {
+    "Gemini Nano Banana": "nano_banana",
+    "FLUX.2 Klein": "flux_klein",
+}
 
-def _load_prompt(filename: str) -> str:
-    path = _PROMPTS_DIR / filename
+PURPOSES = ["Text to Image", "Image Editing", "Multi Image Fusion"]
+
+_PROMPT_FILENAMES = {
+    "Text to Image": "text_to_image.md",
+    "Image Editing": "image_editing.md",
+    "Multi Image Fusion": "multi_image_fusion.md",
+}
+
+
+def _load_prompt(subfolder: str, filename: str) -> str:
+    path = _PROMPTS_DIR / subfolder / filename
     return path.read_text(encoding="utf-8").strip()
 
 
+# Nested dict: SYSTEM_PROMPTS[image_generation_model][purpose] -> system prompt string
 SYSTEM_PROMPTS = {
-    "Text to Image": _load_prompt("text_to_image.md"),
-    "Image Editing": _load_prompt("image_editing.md"),
-    "Multi Image Fusion": _load_prompt("multi_image_fusion.md"),
+    model_name: {
+        purpose: _load_prompt(subfolder, _PROMPT_FILENAMES[purpose])
+        for purpose in PURPOSES
+    }
+    for model_name, subfolder in IMAGE_GENERATION_MODELS.items()
 }
 
 MODEL_IDS = {
     "Gemini Flash 2.5": "gemini-2.5-flash",
 }
 
-NODE_NAME = "Nano-Banana-Monks Prompt Enhancer"
+NODE_NAME = "Monks Image Generation Prompt Enhancer"
 
 
 # ---------------------------------------------------------------------------
@@ -49,14 +66,18 @@ class MonksPromptEnhancer:
     """ComfyUI custom node that enhances prompts via the Gemini API."""
 
     DESCRIPTION = (
-        "Enhances a raw prompt using the Gemini API, guided by a purpose-specific system prompt.\n"
+        "Uses the Gemini API to rewrite a raw prompt into one optimised for a specific image generation model and workflow.\n"
         "\n"
-        "Purposes:\n"
-        "  • Text to Image — rewrites the prompt as a detailed, narrative paragraph optimized for image generation.\n"
-        "  • Image Editing — refines the prompt to describe precisely what should change in a reference image.\n"
-        "  • Multi Image Fusion — structures the prompt for inpainting: names the target region and preserves everything else.\n"
+        "Select the Target Image Generation Model to apply the right prompting strategy:\n"
+        "  • Gemini Nano Banana — narrative prose structured around subject, setting, lighting, and atmosphere.\n"
+        "  • FLUX.2 Klein — flowing descriptive prose (no keyword lists); concise action-oriented edits for img2img; simple explicit references for multi-image composition.\n"
         "\n"
-        "Connect a Reference Image (optional) to include it in the Gemini call as a visual reference."
+        "Select the Purpose to match your workflow:\n"
+        "  • Text to Image — expands a raw idea into a detailed, model-ready prompt.\n"
+        "  • Image Editing — strips out base-image descriptions and returns only the transformational action.\n"
+        "  • Multi Image Fusion — produces a minimal explicit reference prompt (e.g. 'change image 1 to match the style of image 2').\n"
+        "\n"
+        "Connect a Reference Image (optional) to include it in the Gemini call as visual context."
     )
 
     @classmethod
@@ -65,8 +86,9 @@ class MonksPromptEnhancer:
             "required": {
                 "prompt": ("STRING", {"multiline": True, "default": ""}),
                 "api_key": ("STRING", {"default": "", "password": True}),
-                "model": (list(MODEL_IDS.keys()),),
-                "purpose": (list(SYSTEM_PROMPTS.keys()),),
+                "prompt_generation_model": (list(MODEL_IDS.keys()),),
+                "target_image_generation_model": (list(IMAGE_GENERATION_MODELS.keys()),),
+                "purpose": (PURPOSES,),
             },
             "optional": {
                 "reference_image": ("IMAGE",),
@@ -83,7 +105,8 @@ class MonksPromptEnhancer:
         self,
         prompt: str,
         api_key: str,
-        model: str,
+        prompt_generation_model: str,
+        target_image_generation_model: str,
         purpose: str,
         reference_image=None,
     ) -> tuple[str]:
@@ -92,8 +115,8 @@ class MonksPromptEnhancer:
         if not prompt.strip():
             raise ValueError(f"[{NODE_NAME}] Prompt cannot be empty.")
 
-        system_prompt = SYSTEM_PROMPTS[purpose]
-        model_id = MODEL_IDS[model]
+        system_prompt = SYSTEM_PROMPTS[target_image_generation_model][purpose]
+        model_id = MODEL_IDS[prompt_generation_model]
 
         genai.configure(api_key=api_key)
         gemini_model = genai.GenerativeModel(
@@ -127,5 +150,5 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "MonksPromptEnhancer": NODE_NAME,
+    "MonksPromptEnhancer": "Monks Image Generation Prompt Enhancer",
 }
