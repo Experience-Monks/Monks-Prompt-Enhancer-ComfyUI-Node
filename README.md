@@ -26,7 +26,8 @@ The node will appear under the **Gemini AI/TextGen** category.
 |---|---|---|
 | `prompt` | Text (multiline) | The raw prompt to enhance |
 | `api_key` | Text (masked) | Your Google Gemini API key |
-| `model` | Dropdown | Gemini model to use |
+| `prompt_generation_model` | Dropdown | Gemini model used to enhance the prompt |
+| `target_image_generation_model` | Dropdown | Image generation model the enhanced prompt is intended for |
 | `purpose` | Dropdown | Prompt enhancement mode |
 | `reference_image` | IMAGE (optional) | Reference image passed to Gemini alongside the prompt |
 
@@ -81,19 +82,31 @@ Connect the image to edit and describe the change. The node refines the prompt f
 
 ## System Prompts
 
-Each purpose loads its system prompt from a `.md` file under `prompts/`:
+System prompts are organised by target image generation model under `prompts/`:
 
 ```
 prompts/
-├── text_to_image.md
-├── image_editing.md
-└── multi_image_fusion.md
+├── nano_banana/
+│   ├── text_to_image.md
+│   ├── image_editing.md
+│   └── multi_image_fusion.md
+└── flux_klein/
+    ├── text_to_image.md
+    ├── image_editing.md
+    └── multi_image_fusion.md
 ```
 
-Edit these files to customize the enhancement behavior without touching the node code.
+Edit the relevant file to customize the enhancement behavior for a specific model/purpose combination without touching the node code. To add a new target model, create a new subfolder with the three purpose files and register it in `IMAGE_GENERATION_MODELS` in `monks_prompt_enhancer.py`.
 
-## Models
+## Prompt Generation Models
 
-| Display name | Model ID |
+| `prompt_generation_model` | Model ID |
 |---|---|
 | Gemini Flash 2.5 | `gemini-2.5-flash` |
+
+## Target Image Generation Models
+
+| `target_image_generation_model` | Prompts subfolder |
+|---|---|
+| Gemini Nano Banana | `prompts/nano_banana/` |
+| FLUX.2 Klein | `prompts/flux_klein/` |
