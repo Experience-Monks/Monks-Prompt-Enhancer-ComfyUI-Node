@@ -47,6 +47,38 @@ Refines the prompt to clearly describe **what should change** in a reference ima
 ### Multi Image Fusion
 Structures the prompt for inpainting: clearly names the target region to change and explicitly preserves everything else, using Gemini's semantic masking capabilities. Connect the base image as the reference image.
 
+## Usage Examples
+
+### Text to Image — no reference image
+Write a short description and let the node expand it into a detailed, structured prompt ready for image generation.
+
+![Text to Image example](documentation/usage_examples/generate-prompt-for-text-to-image.png)
+
+> **Input:** `Generate a wide open shot of a forest`
+> **Output:** A photorealistic wide-angle shot of a majestic, ancient forest, showcasing towering pine and oak trees reaching towards the sky. The forest floor is covered in rich green moss and ferns, with shafts of soft, dappled golden hour sunlight filtering down through the dense canopy, creating a serene and ethereal atmosphere. Captured with a wide-angle lens, emphasizing the expansive scale and natural beauty of the untouched wilderness, with a shallow depth of field.
+
+---
+
+### Text to Image — with Reference Image
+Connect an image to give Gemini a visual reference. The node generates a new prompt inspired by the image's composition, style, or content.
+
+![Text to Image with reference image example](documentation/usage_examples/generate-prompt-for-text-to-image-with-refe.png)
+
+> **Input:** `Use the reference image and generate a prompt to create that image`
+> **Output:** A high-resolution, studio-lit product photograph of a pink Pepto Bismol bottle with a yellow cap, standing prominently at the center of a clean, light-colored marble dining table. In the softly blurred background, a woman and a man are seated at the table, engaged in a warm, natural conversation. The entire scene is brightly illuminated by bright, natural daylight streaming through a large window, creating soft reflections on the marble surface and adding warmth and authenticity to the lifestyle setting of the product. Camera angle is a straight-on medium shot, with a shallow depth of field keeping the product in sharp focus while gently blurring the background. Ultra-realistic, sharp focus on the product, vertical portrait format.
+
+---
+
+### Image Editing — with Reference Image
+Connect the image to edit and describe the change. The node refines the prompt for precision so Gemini knows exactly what to modify and what to preserve.
+
+![Image Editing example](documentation/usage_examples/generate-prompt-for-image-editing.png)
+
+> **Input:** `Remove the Bottle from the Table`
+> **Output:** Remove the pink Pepto Bismol bottle from the table. Fill the space with the existing marble tabletop texture, maintaining the original lighting and reflections.
+
+---
+
 ## System Prompts
 
 Each purpose loads its system prompt from a `.md` file under `prompts/`:

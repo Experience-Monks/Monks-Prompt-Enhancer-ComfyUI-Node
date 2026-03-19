@@ -76,7 +76,7 @@ class MonksPromptEnhancer:
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("enhanced_prompt",)
     FUNCTION = "enhance"
-    CATEGORY = "Gemini AI/TextGen"
+    CATEGORY = "@Gemini AI/TextGen"
     OUTPUT_NODE = False
 
     def enhance(
