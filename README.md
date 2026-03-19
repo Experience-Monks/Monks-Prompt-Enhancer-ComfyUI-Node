@@ -28,6 +28,7 @@ The node will appear under the **Gemini AI/TextGen** category.
 | `api_key` | Text (masked) | Your Google Gemini API key |
 | `model` | Dropdown | Gemini model to use |
 | `purpose` | Dropdown | Prompt enhancement mode |
+| `reference_image` | IMAGE (optional) | Reference image passed to Gemini alongside the prompt |
 
 ## Outputs
 
@@ -38,13 +39,13 @@ The node will appear under the **Gemini AI/TextGen** category.
 ## Purposes
 
 ### Text to Image
-Rewrites the prompt as a flowing, narrative paragraph structured around subject, setting, details, lighting, atmosphere, and style — optimized for Gemini's native text-to-image generation.
+Rewrites the prompt as a flowing, narrative paragraph structured around subject, setting, details, lighting, atmosphere, and style — optimized for Gemini's native text-to-image generation. If a reference image is connected, Gemini uses it as a style or composition reference.
 
 ### Image Editing
-Refines the prompt to clearly describe **what should change** in a reference image, using precise editing patterns (additions, removals, style transfers, multi-image compositions).
+Refines the prompt to clearly describe **what should change** in a reference image, using precise editing patterns (additions, removals, style transfers, multi-image compositions). Connect the image being edited as the reference image.
 
 ### Multi Image Fusion
-Structures the prompt for inpainting: clearly names the target region to change and explicitly preserves everything else, using Gemini's semantic masking capabilities.
+Structures the prompt for inpainting: clearly names the target region to change and explicitly preserves everything else, using Gemini's semantic masking capabilities. Connect the base image as the reference image.
 
 ## System Prompts
 

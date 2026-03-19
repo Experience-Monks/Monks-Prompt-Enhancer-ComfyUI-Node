@@ -48,6 +48,17 @@ def _tensor_to_pil(tensor) -> Image.Image:
 class MonksPromptEnhancer:
     """ComfyUI custom node that enhances prompts via the Gemini API."""
 
+    DESCRIPTION = (
+        "Enhances a raw prompt using the Gemini API, guided by a purpose-specific system prompt.\n"
+        "\n"
+        "Purposes:\n"
+        "  • Text to Image — rewrites the prompt as a detailed, narrative paragraph optimized for image generation.\n"
+        "  • Image Editing — refines the prompt to describe precisely what should change in a reference image.\n"
+        "  • Multi Image Fusion — structures the prompt for inpainting: names the target region and preserves everything else.\n"
+        "\n"
+        "Connect a Reference Image (optional) to include it in the Gemini call as a visual reference."
+    )
+
     @classmethod
     def INPUT_TYPES(cls):
         return {
