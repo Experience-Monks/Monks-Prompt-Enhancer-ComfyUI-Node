@@ -43,7 +43,7 @@ MODEL_IDS = {
     "Gemini Flash 2.5": "gemini-2.5-flash",
 }
 
-NODE_NAME = "Nano-Banana-Monks Prompt Enhancer"
+NODE_NAME = "Monks Image Generation Prompt Enhancer"
 
 
 # ---------------------------------------------------------------------------
@@ -66,18 +66,18 @@ class MonksPromptEnhancer:
     """ComfyUI custom node that enhances prompts via the Gemini API."""
 
     DESCRIPTION = (
-        "Enhances a raw prompt using the Gemini API, guided by a purpose- and model-specific system prompt.\n"
+        "Uses the Gemini API to rewrite a raw prompt into one optimised for a specific image generation model and workflow.\n"
         "\n"
-        "Image Generation Models:\n"
-        "  • Gemini Nano Banana — prompts optimised for Gemini's native image generation.\n"
-        "  • FLUX.2 Klein — prompts optimised for the FLUX.2 Klein model.\n"
+        "Select the Target Image Generation Model to apply the right prompting strategy:\n"
+        "  • Gemini Nano Banana — narrative prose structured around subject, setting, lighting, and atmosphere.\n"
+        "  • FLUX.2 Klein — flowing descriptive prose (no keyword lists); concise action-oriented edits for img2img; simple explicit references for multi-image composition.\n"
         "\n"
-        "Purposes:\n"
-        "  • Text to Image — rewrites the prompt as a detailed, narrative paragraph optimized for image generation.\n"
-        "  • Image Editing — refines the prompt to describe precisely what should change in a reference image.\n"
-        "  • Multi Image Fusion — structures the prompt for inpainting: names the target region and preserves everything else.\n"
+        "Select the Purpose to match your workflow:\n"
+        "  • Text to Image — expands a raw idea into a detailed, model-ready prompt.\n"
+        "  • Image Editing — strips out base-image descriptions and returns only the transformational action.\n"
+        "  • Multi Image Fusion — produces a minimal explicit reference prompt (e.g. 'change image 1 to match the style of image 2').\n"
         "\n"
-        "Connect a Reference Image (optional) to include it in the Gemini call as a visual reference."
+        "Connect a Reference Image (optional) to include it in the Gemini call as visual context."
     )
 
     @classmethod
@@ -150,5 +150,5 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "MonksPromptEnhancer": NODE_NAME,
+    "MonksPromptEnhancer": "Monks Image Generation Prompt Enhancer",
 }
